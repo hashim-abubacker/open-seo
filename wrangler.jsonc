@@ -3,6 +3,10 @@
   "name": "open-seo",
   "main": "src/server.ts",
   "compatibility_date": "2025-09-02",
+  "vars": {
+  "AUTH_MODE": "local_noauth"
+  "DATAFORSEO_API_KEY": "Y29udGFjdEBoYXNoaW0uaW46MGIwMzI4Y2Y5ZGY0NjA="
+  }
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true,
