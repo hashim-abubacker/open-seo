@@ -4,36 +4,36 @@
   "main": "src/server.ts",
   "compatibility_date": "2025-09-02",
   "vars": {
-  "AUTH_MODE": "local_noauth"
-  "DATAFORSEO_API_KEY": "Y29udGFjdEBoYXNoaW0uaW46MGIwMzI4Y2Y5ZGY0NjA="
-  }
+    "AUTH_MODE": "local_noauth",
+    "DATAFORSEO_API_KEY": "Y29udGFjdEBoYXNoaW0uaW46MGIwMzI4Y2Y5ZGY0NjA="
+  },
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true,
     // Spans are billed as observability events (free tier 200k/day); add a
     // traces head_sampling_rate below 1 if span volume becomes a cost concern.
     "traces": {
-      "enabled": true,
-    },
+      "enabled": true
+    }
   },
   // Smart Placement relocates only the `fetch` handler (cron + Workflow runs
   // stay at the edge) toward external subrequests — Postgres via Hyperdrive,
   // SEO APIs — not D1/KV/R2 bindings, so it's a DB no-op on the D1 default.
   // Must live here: a dashboard-only toggle is wiped by `wrangler deploy`.
   "placement": {
-    "mode": "smart",
+    "mode": "smart"
   },
   "workflows": [
     {
       "name": "site-audit-workflow",
       "binding": "SITE_AUDIT_WORKFLOW",
-      "class_name": "SiteAuditWorkflow",
+      "class_name": "SiteAuditWorkflow"
     },
     {
       "name": "rank-check-workflow",
       "binding": "RANK_CHECK_WORKFLOW",
-      "class_name": "RankCheckWorkflow",
-    },
+      "class_name": "RankCheckWorkflow"
+    }
   ],
   // Durable Object backing the onboarding strategy chat (Agents SDK
   // AIChatAgent). One instance per project; messages persist in the DO's
@@ -44,41 +44,41 @@
     "bindings": [
       {
         "name": "ONBOARDING_CHAT",
-        "class_name": "OnboardingChatAgent",
+        "class_name": "OnboardingChatAgent"
       },
       // SAM in-app agent. One instance per chat session; messages persist in the
       // DO's SQLite. SQLite-backed classes must be declared in `migrations`.
       {
         "name": "SAM_CHAT",
-        "class_name": "SamChatAgent",
+        "class_name": "SamChatAgent"
       },
       // Per-audit crawl scratchpad: frontier, link edges, and a slim page
       // mirror in the DO's SQLite. Destroyed at finalize; self-cleans via
       // alarm if the audit dies.
       {
         "name": "AUDIT_SCRATCHPAD",
-        "class_name": "AuditScratchpad",
-      },
-    ],
+        "class_name": "AuditScratchpad"
+      }
+    ]
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["OnboardingChatAgent"],
+      "new_sqlite_classes": ["OnboardingChatAgent"]
     },
     {
       "tag": "v2",
-      "new_sqlite_classes": ["SamChatAgent"],
+      "new_sqlite_classes": ["SamChatAgent"]
     },
     {
       "tag": "v3",
-      "new_sqlite_classes": ["AuditScratchpad"],
-    },
+      "new_sqlite_classes": ["AuditScratchpad"]
+    }
   ],
   "triggers": {
     // Every 5 min: rank checks + stale-audit reconcile. Daily: OAuth KV GC.
     // Dispatched on controller.cron in src/server.ts `scheduled`.
-    "crons": ["*/5 * * * *", "17 3 * * *"],
+    "crons": ["*/5 * * * *", "17 3 * * *"]
   },
   // This config serves local dev and Docker self-host only. All Cloudflare
   // deployments — previews, prod, self-host — go through Alchemy
@@ -92,20 +92,20 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "id": "39d6ec17639640d4b3ebebc39b7a7e2d",
+      "id": "39d6ec17639640d4b3ebebc39b7a7e2d"
     },
     {
       "binding": "OAUTH_KV",
-      "id": "29510b8d3dfc47968c68ef7075092758",
-    },
+      "id": "29510b8d3dfc47968c68ef7075092758"
+    }
   ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "open-seo",
       "database_id": "05bd8276-b94d-4983-aeca-e98822bc7874",
-      "migrations_dir": "drizzle",
-    },
+      "migrations_dir": "drizzle"
+    }
   ],
   // Postgres scale path (opt-in; D1 is the default). Hyperdrive is the ONLY way
   // the app connects to Postgres — there is no direct-connection fallback. For
@@ -126,7 +126,7 @@
   "r2_buckets": [
     {
       "bucket_name": "open-seo",
-      "binding": "R2",
-    },
-  ],
+      "binding": "R2"
+    }
+  ]
 }
